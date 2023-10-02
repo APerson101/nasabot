@@ -1,5 +1,4 @@
 from typing import Union
-from fastapi.events import StartupEvent
 from run import (
   GetAnswer, 
    initialize )
@@ -13,12 +12,11 @@ def read_root():
     return {"Hello": "World"}
 
 
+@app.on_event("startup")
 async def startup_event():
     print("FastAPI application starting up")
     initialize()
 
-# Register the startup event
-app.add_event_handler(StartupEvent, startup_event)
 
 
 @app.post("/request/")
@@ -27,3 +25,8 @@ async def get_answer(item:dict):
     id=item['user_id']
     answer=GetAnswer(question, id)
     return {'answer':answer}
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
