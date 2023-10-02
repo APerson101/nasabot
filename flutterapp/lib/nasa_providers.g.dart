@@ -155,7 +155,7 @@ class _GetHistoryProviderElement
   String get id => (origin as GetHistoryProvider).id;
 }
 
-String _$askQuestionHash() => r'b2eec932fa7312a6e1beba42dbfda606528be464';
+String _$askQuestionHash() => r'2252bf5cb2c53ba2059a61589d96def0885770f8';
 
 /// See also [askQuestion].
 @ProviderFor(askQuestion)

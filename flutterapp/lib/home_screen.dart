@@ -45,9 +45,10 @@ class ChatWidget extends ConsumerWidget {
           decoration: InputDecoration(
               suffixIcon: IconButton(
                   onPressed: () async {
-                    assert(ref.read(_questionProvider) != null);
-                    ref.watch(askQuestionProvider(
-                        username, ref.watch(_questionProvider)!));
+                    // assert(ref.read(_questionProvider) != null);
+                    ref.watch(askQuestionProvider(username, ''));
+                    // ref.watch(askQuestionProvider(
+                    //     username, ref.watch(_questionProvider)!));
                   },
                   icon: const Icon(Icons.send)),
               border: OutlineInputBorder(

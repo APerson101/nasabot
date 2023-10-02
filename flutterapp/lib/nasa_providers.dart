@@ -13,7 +13,9 @@ FutureOr getHistory(GetHistoryRef ref, String id) async {
 
 @riverpod
 FutureOr askQuestion(AskQuestionRef ref, String id, String question) async {
-  var response = await http
-      .post(Uri.parse(url), body: {'user_id': id, 'question': question});
+  var response = await http.post(Uri.parse(url), body: {
+    'user_id': id,
+    'question': 'who are the researchers of the papers?'
+  });
   debugPrint(response.body);
 }
