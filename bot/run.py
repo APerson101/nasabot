@@ -117,8 +117,7 @@ def get_llama():
                                              gpu_layers=0,) 
   return llm 
 def initialize(): 
-  n_gpu_layers = 8  # Metal set to 1 is enough.  
-  n_batch = 512  # Should be between 1 and n_ctx, consider the amount of RAM of your Apple Silicon Chip. 
+  n_batch = 512 
   callback_manager = CallbackManager([StreamingStdOutCallbackHandler()]) 
  
   # Make sure the model path is correct for your system! 
@@ -162,42 +161,32 @@ def setup_base():
 
 
 def GetAnswer(question:str,  id:str):
-  # messages=[ 
-  #     SystemMessagePromptTemplate.from_template( 
-  #        '''You are an advanced AI-powered Research Assistant designed to assist users throughout their research journey in the context of the conversation.You are Capable of understanding natural language queries, your primary goal is to streamline the research process for users in various academic disciplines. As a Research Assistant , you should excel in the following tasks:\n 
-  #       "1. Problem Identification:Prompt users to articulate and refine their research problems or questions effectively.\n" 
-  #       2. Literature Review:Conduct literature searches based on user-specified topics. Summarize and present key findings from relevant research articles.\n 
-  #       3. Research: Provide examples and explanations of different research methodologies from researches\n 
-  #       4. Do not answer anything that you do not know'''), 
-  #       MessagesPlaceholder(variable_name="chat_history"), 
-  #       HumanMessagePromptTemplate.from_template("{question}")] 
-  
-  # prompt = ChatPromptTemplate(messages=messages) 
-  #  base = RetrievalQA.from_chain_type( 
-  #       llm=llama, retriever=chroma_db.as_retriever(), 
-  #       chain_type_kwargs={"prompt": prompt} 
-  #       ) 
-  #  result=base({'query':"who are the researchers of the papers?"}) 
-  #  result["result"]
   print(f"question asked is {question}")
-  history = get_history_from_id(id=id)
-  print(f"history is {history}")
-  memory = ConversationBufferMemory(memory_key="chat_history", chat_memory=history) 
-  conversation = ConversationalRetrievalChain.from_llm( 
-      llm=llama,verbose=True,memory=memory, retriever=chroma_db.as_retriever()) 
-  result=conversation(question) 
-  print(f"answer is {result}")
-  return result['answer']
+  history = get_history_from_id(id=id, question=question)
+  print(f"history is {history.messages}")
+  memory = ConversationBufferMemory(memory_key="chat_history", 
+                                    chat_memory=history, 
+                                    return_messages=True, 
+                                    output_key='answer')
+  conversation = ConversationalRetrievalChain.from_llm(
+      llm=llama,verbose=True,memory=memory, retriever=chroma_db.as_retriever())
+  result=conversation(question)
+ # print(f"answer is {result}")
+  return history.messages
+  #return result['answer']
 
-def get_history_from_id(id:str, question):
-   history = StreamlitChatMessageHistory(key=id)
-   history.add_user_message(question)
+def get_history_from_id(id:str, question:str):
+
+
+   history = SQLChatMessageHistory(
+    session_id=id,
+    connection_string='sqlite:///sqlite.db')
    return history
-   
+
 
 def GetUserHistory(id:str):
-   history = StreamlitChatMessageHistory(key=id)
+   history = SQLChatMessageHistory(session_id=id, connection_string='sqlite:///sqlite.db')
    if len(history.messages) == 0:
       return []
-   return history
-   
+   return [msg.content for msg in history.messages]
+                                                     

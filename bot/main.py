@@ -1,12 +1,26 @@
 from typing import Union
 import subprocess
+from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
 from run import (
   GetAnswer, 
   GetUserHistory,
    initialize )
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 
 app = FastAPI()
+
+# Enable CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Adjust this to your frontend's URL
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+# class QuestionInput(BaseModel):
+#     user_id: int
+#     question: str
 
 
 @app.get("/")
@@ -33,12 +47,15 @@ def launch_flutter_app():
 async def startup_event():
     print("FastAPI application starting up")
     initialize()
-    launch_flutter_app()
+
+    # launch_flutter_app()
 
 
 
-@app.post("/request/")
-async def get_answer(item:dict):
+@app.post("/request")
+async def get_answer(item:Request):
+    item = await item.json()
+    print(item)
     question=item['question']
     id=item['user_id']
     answer=GetAnswer(question, id)

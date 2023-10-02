@@ -14,7 +14,7 @@ class AuthScreen extends ConsumerWidget {
             padding: const EdgeInsets.all(8.0),
             child: TextFormField(
               onChanged: (newname) {
-                ref.watch(_usernameProvider.notifier).state = newname;
+                ref.watch(activeuserProvider.notifier).state = newname;
               },
               decoration: const InputDecoration(hintText: 'Enter username'),
             )),
@@ -27,7 +27,7 @@ class AuthScreen extends ConsumerWidget {
         ElevatedButton(
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return HomeScreen(username: ref.watch(_usernameProvider));
+              return HomeScreen(username: ref.watch(activeuserProvider));
             }));
           },
           style: ElevatedButton.styleFrom(
@@ -39,4 +39,4 @@ class AuthScreen extends ConsumerWidget {
   }
 }
 
-final _usernameProvider = StateProvider((ref) => '');
+final activeuserProvider = StateProvider((ref) => '');

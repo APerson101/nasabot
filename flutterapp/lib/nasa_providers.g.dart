@@ -155,7 +155,7 @@ class _GetHistoryProviderElement
   String get id => (origin as GetHistoryProvider).id;
 }
 
-String _$askQuestionHash() => r'2252bf5cb2c53ba2059a61589d96def0885770f8';
+String _$askQuestionHash() => r'13e4ef1af09b1ddcb9a5733cc2daf938559ca564';
 
 /// See also [askQuestion].
 @ProviderFor(askQuestion)
@@ -299,5 +299,22 @@ class _AskQuestionProviderElement
   @override
   String get question => (origin as AskQuestionProvider).question;
 }
+
+String _$questionHistoryHash() => r'ac44cd12849766dc2fd93dc47513ff26b2a44a61';
+
+/// See also [QuestionHistory].
+@ProviderFor(QuestionHistory)
+final questionHistoryProvider =
+    AutoDisposeAsyncNotifierProvider<QuestionHistory, List<dynamic>>.internal(
+  QuestionHistory.new,
+  name: r'questionHistoryProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$questionHistoryHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$QuestionHistory = AutoDisposeAsyncNotifier<List<dynamic>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

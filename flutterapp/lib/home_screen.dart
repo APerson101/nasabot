@@ -40,7 +40,43 @@ class ChatWidget extends ConsumerWidget {
   final String username;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen(_askingQuestion, (previous, next) {
+      if (previous != next) {
+        if (next) {
+          // ask question
+        }
+      }
+    });
     return Scaffold(
+      body: ref.watch(questionHistoryProvider).when(data: (data) {
+        return SingleChildScrollView(
+          controller: ScrollController()
+            ..animateTo(MediaQuery.of(context).size.height * .9,
+                duration: const Duration(seconds: 1), curve: Curves.linear),
+          child: Column(
+              children: data.map((e) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                  child: DecoratedBox(
+                      decoration: BoxDecoration(color: Colors.lightBlue[50]),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Card(child: Text(e)),
+                      ))),
+            );
+          }).toList()),
+        );
+      }, error: (er, st) {
+        debugPrintStack(stackTrace: st);
+        return const Center(
+          child: Text("Failed to load"),
+        );
+      }, loading: () {
+        return const Center(
+          child: CircularProgressIndicator.adaptive(),
+        );
+      }),
       persistentFooterButtons: [
         TextFormField(
           onChanged: (question) {
@@ -49,10 +85,8 @@ class ChatWidget extends ConsumerWidget {
           decoration: InputDecoration(
               suffixIcon: IconButton(
                   onPressed: () async {
-                    // assert(ref.read(_questionProvider) != null);
-                    ref.watch(askQuestionProvider(username, ''));
-                    // ref.watch(askQuestionProvider(
-                    //     username, ref.watch(_questionProvider)!));
+                    ref.watch(askQuestionProvider(
+                        username, ref.watch(_questionProvider)!));
                   },
                   icon: const Icon(Icons.send)),
               border: OutlineInputBorder(
@@ -65,3 +99,4 @@ class ChatWidget extends ConsumerWidget {
 }
 
 final _questionProvider = StateProvider<String?>((ref) => null);
+final _askingQuestion = StateProvider((ref) => false);
