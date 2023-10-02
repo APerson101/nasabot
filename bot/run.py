@@ -191,3 +191,10 @@ def get_history_from_id(id:str, question):
    history.add_user_message(question)
    return history
    
+
+def GetUserHistory(id:str):
+   history = StreamlitChatMessageHistory(key=id)
+   if len(history.messages) == 0:
+      return []
+   return history
+   

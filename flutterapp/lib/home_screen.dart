@@ -11,10 +11,14 @@ class HomeScreen extends ConsumerWidget {
     return Stack(
       children: [
         isMobile
-            ? const Positioned(left: 10, width: 60, child: ChatHistory())
+            ? const Positioned(
+                left: 10, width: 60, bottom: 10, top: 10, child: ChatHistory())
             : Container(),
         Positioned(
             left: isMobile ? 10 : 70,
+            right: 0,
+            top: 10,
+            bottom: 10,
             child: ChatWidget(
               username: username,
             )),

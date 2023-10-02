@@ -2,6 +2,7 @@ from typing import Union
 import subprocess
 from run import (
   GetAnswer, 
+  GetUserHistory,
    initialize )
 from fastapi import FastAPI
 
@@ -42,7 +43,9 @@ async def get_answer(item:dict):
     id=item['user_id']
     answer=GetAnswer(question, id)
     return {'answer':answer}
-
+@app.get("/history/{username}")
+async def get_history(username:str):
+    return {'history':GetUserHistory(username)}
 
 if __name__ == "__main__":
     import uvicorn
