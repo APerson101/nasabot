@@ -179,11 +179,14 @@ def GetAnswer(question:str,  id:str):
   #       ) 
   #  result=base({'query':"who are the researchers of the papers?"}) 
   #  result["result"]
+  print(f"question asked is {question}")
   history = get_history_from_id(id=id)
+  print(f"history is {history}")
   memory = ConversationBufferMemory(memory_key="chat_history", chat_memory=history) 
   conversation = ConversationalRetrievalChain.from_llm( 
       llm=llama,verbose=True,memory=memory, retriever=chroma_db.as_retriever()) 
   result=conversation(question) 
+  print(f"answer is {result}")
   return result['answer']
 
 def get_history_from_id(id:str, question):

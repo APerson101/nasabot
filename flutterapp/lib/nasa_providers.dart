@@ -4,7 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'nasa_providers.g.dart';
 
-String url = "http://3.95.131.62:8000//gethistory";
+String url = "http://3.95.131.62:8000/request";
 @riverpod
 FutureOr getHistory(GetHistoryRef ref, String id) async {
   var response = await http.post(Uri.parse(url), body: {'username': id});
